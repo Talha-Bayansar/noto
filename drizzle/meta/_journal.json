@@ -8,6 +8,20 @@
       "when": 1748704501506,
       "tag": "0000_simple_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748800967030,
+      "tag": "0001_fancy_black_bolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748801029887,
+      "tag": "0002_strong_the_professor",
+      "breakpoints": true
     }
   ]
 }

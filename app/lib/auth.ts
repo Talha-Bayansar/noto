@@ -2,18 +2,23 @@ import { betterAuth } from "better-auth";
 import { reactStartCookies } from "better-auth/react-start";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
-import { magicLink } from "better-auth/plugins";
+import { magicLink, organization } from "better-auth/plugins";
 import { mailService } from "@/features/mail/services/mail.service";
-import { session, user, account, verification } from "@/db/schemas/auth";
+import {
+  sessionTable,
+  userTable,
+  accountTable,
+  verificationTable,
+} from "@/db/schemas/auth";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
-      user,
-      session,
-      account,
-      verification,
+      user: userTable,
+      session: sessionTable,
+      account: accountTable,
+      verification: verificationTable,
     },
   }),
   plugins: [
@@ -24,6 +29,7 @@ export const auth = betterAuth({
         return response;
       },
     }),
+    organization(),
     reactStartCookies(),
   ],
 });
