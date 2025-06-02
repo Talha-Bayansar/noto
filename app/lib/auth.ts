@@ -9,6 +9,9 @@ import {
   userTable,
   accountTable,
   verificationTable,
+  organizationTable,
+  memberTable,
+  invitationTable,
 } from "@/db/schemas/auth";
 
 export const auth = betterAuth({
@@ -19,6 +22,9 @@ export const auth = betterAuth({
       session: sessionTable,
       account: accountTable,
       verification: verificationTable,
+      organization: organizationTable,
+      member: memberTable,
+      invitation: invitationTable,
     },
   }),
   plugins: [

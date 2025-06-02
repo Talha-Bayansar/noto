@@ -82,7 +82,7 @@ export const memberTable = pgTable("member", {
   createdAt: timestamp("created_at").notNull(),
 });
 
-export const invitation = pgTable("invitation", {
+export const invitationTable = pgTable("invitation", {
   id: text("id").primaryKey(),
   organizationId: text("organization_id")
     .notNull()

@@ -11,10 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/_auth/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
+import { Route as AuthNotesRouteImport } from './routes/_auth/notes/route'
+import { Route as AuthNotesIndexImport } from './routes/_auth/notes/index'
 
 // Create/Update Routes
+
+const AuthRouteRoute = AuthRouteImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -28,6 +36,18 @@ const AuthIndexRoute = AuthIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthNotesRouteRoute = AuthNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthNotesIndexRoute = AuthNotesIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthNotesRouteRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -39,6 +59,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/notes': {
+      id: '/_auth/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof AuthNotesRouteImport
+      parentRoute: typeof AuthRouteImport
+    }
     '/auth/': {
       id: '/auth/'
       path: '/auth'
@@ -46,43 +80,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/notes/': {
+      id: '/_auth/notes/'
+      path: '/'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof AuthNotesIndexImport
+      parentRoute: typeof AuthNotesRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthNotesRouteRouteChildren {
+  AuthNotesIndexRoute: typeof AuthNotesIndexRoute
+}
+
+const AuthNotesRouteRouteChildren: AuthNotesRouteRouteChildren = {
+  AuthNotesIndexRoute: AuthNotesIndexRoute,
+}
+
+const AuthNotesRouteRouteWithChildren = AuthNotesRouteRoute._addFileChildren(
+  AuthNotesRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthNotesRouteRoute: typeof AuthNotesRouteRouteWithChildren
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthNotesRouteRoute: AuthNotesRouteRouteWithChildren,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof AuthRouteRouteWithChildren
+  '/notes': typeof AuthNotesRouteRouteWithChildren
   '/auth': typeof AuthIndexRoute
+  '/notes/': typeof AuthNotesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof AuthRouteRouteWithChildren
   '/auth': typeof AuthIndexRoute
+  '/notes': typeof AuthNotesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_auth/notes': typeof AuthNotesRouteRouteWithChildren
   '/auth/': typeof AuthIndexRoute
+  '/_auth/notes/': typeof AuthNotesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth'
+  fullPaths: '/' | '' | '/notes' | '/auth' | '/notes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth'
-  id: '__root__' | '/' | '/auth/'
+  to: '/' | '' | '/auth' | '/notes'
+  id: '__root__' | '/' | '/_auth' | '/_auth/notes' | '/auth/' | '/_auth/notes/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
 }
 
@@ -97,14 +172,32 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_auth",
         "/auth/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/_auth": {
+      "filePath": "_auth/route.tsx",
+      "children": [
+        "/_auth/notes"
+      ]
+    },
+    "/_auth/notes": {
+      "filePath": "_auth/notes/route.tsx",
+      "parent": "/_auth",
+      "children": [
+        "/_auth/notes/"
+      ]
+    },
     "/auth/": {
       "filePath": "auth/index.tsx"
+    },
+    "/_auth/notes/": {
+      "filePath": "_auth/notes/index.tsx",
+      "parent": "/_auth/notes"
     }
   }
 }
