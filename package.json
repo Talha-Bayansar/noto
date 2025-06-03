@@ -8,6 +8,7 @@
     "build": "vinxi build",
     "start": "vinxi start",
     "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [],

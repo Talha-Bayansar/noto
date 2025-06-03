@@ -8,6 +8,13 @@
       "when": 1748704501506,
       "tag": "0000_simple_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748981778179,
+      "tag": "0001_freezing_vengeance",
+      "breakpoints": true
     }
   ]
 }
