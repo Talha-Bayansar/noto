@@ -11,15 +11,29 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as NotesRouteImport } from './routes/notes/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as NotesIndexImport } from './routes/notes/index'
 import { Route as AuthIndexImport } from './routes/auth/index'
 
 // Create/Update Routes
+
+const NotesRouteRoute = NotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const NotesIndexRoute = NotesIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => NotesRouteRoute,
 } as any)
 
 const AuthIndexRoute = AuthIndexImport.update({
@@ -39,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/notes': {
+      id: '/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/': {
       id: '/auth/'
       path: '/auth'
@@ -46,43 +67,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexImport
       parentRoute: typeof rootRoute
     }
+    '/notes/': {
+      id: '/notes/'
+      path: '/'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof NotesIndexImport
+      parentRoute: typeof NotesRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface NotesRouteRouteChildren {
+  NotesIndexRoute: typeof NotesIndexRoute
+}
+
+const NotesRouteRouteChildren: NotesRouteRouteChildren = {
+  NotesIndexRoute: NotesIndexRoute,
+}
+
+const NotesRouteRouteWithChildren = NotesRouteRoute._addFileChildren(
+  NotesRouteRouteChildren,
+)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/notes': typeof NotesRouteRouteWithChildren
   '/auth': typeof AuthIndexRoute
+  '/notes/': typeof NotesIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthIndexRoute
+  '/notes': typeof NotesIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/notes': typeof NotesRouteRouteWithChildren
   '/auth/': typeof AuthIndexRoute
+  '/notes/': typeof NotesIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth'
+  fullPaths: '/' | '/notes' | '/auth' | '/notes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth'
-  id: '__root__' | '/' | '/auth/'
+  to: '/' | '/auth' | '/notes'
+  id: '__root__' | '/' | '/notes' | '/auth/' | '/notes/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NotesRouteRoute: typeof NotesRouteRouteWithChildren
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NotesRouteRoute: NotesRouteRouteWithChildren,
   AuthIndexRoute: AuthIndexRoute,
 }
 
@@ -97,14 +144,25 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/notes",
         "/auth/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/notes": {
+      "filePath": "notes/route.tsx",
+      "children": [
+        "/notes/"
+      ]
+    },
     "/auth/": {
       "filePath": "auth/index.tsx"
+    },
+    "/notes/": {
+      "filePath": "notes/index.tsx",
+      "parent": "/notes"
     }
   }
 }

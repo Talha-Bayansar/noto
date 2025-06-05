@@ -10,7 +10,8 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const { data, isPending } = authClient.useSession();
+  const auth = authClient.useSession();
+  const organization = authClient.useActiveOrganization();
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -18,18 +19,27 @@ function Home() {
     setIsSigningOut(false);
   };
 
-  if (isPending) return null;
+  if (auth.isPending || organization.isPending) return <div>Loading...</div>;
 
   return (
     <div>
-      {data?.user ? (
-        <LoadingButton
-          variant={"destructive"}
-          onClick={handleSignOut}
-          loading={isSigningOut}
-        >
-          Sign Out
-        </LoadingButton>
+      {auth.data?.user ? (
+        <div>
+          <p>Welcome {auth.data.user.email}</p>
+          {organization?.data && (
+            <p>Your organization is {organization.data.name}</p>
+          )}
+          <LoadingButton
+            variant={"destructive"}
+            onClick={handleSignOut}
+            loading={isSigningOut}
+          >
+            Sign Out
+          </LoadingButton>
+          <Button asChild>
+            <Link to="/notes">Notes</Link>
+          </Button>
+        </div>
       ) : (
         <Button asChild>
           <Link to="/auth">Auth</Link>

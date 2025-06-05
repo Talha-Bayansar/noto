@@ -27,11 +27,26 @@ export const auth = betterAuth({
       invitation: invitationTable,
     },
   }),
+  databaseHooks: {
+    user: {
+      create: {
+        async after(user) {
+          const organizationSlug = `my-organization-${user.email}`;
+          await auth.api.createOrganization({
+            body: {
+              name: "My Organization",
+              slug: organizationSlug,
+              userId: user.id,
+            },
+          });
+        },
+      },
+    },
+  },
   plugins: [
     organization(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
-        console.log("sendMagicLink", email, url);
         const response = await mailService.sendMagicLink(email, url);
         return response;
       },
