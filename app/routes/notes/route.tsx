@@ -1,25 +1,30 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { NotoSidebar } from "@/components/noto-sidebar";
-import { getMyOrganizations } from "@/features/organization/server-functions/queries";
-import { authClient } from "@/lib/auth-client";
+import {
+  getActiveOrganization,
+  getMyOrganizations,
+} from "@/features/organization/server-functions/queries";
 
 export const Route = createFileRoute("/notes")({
   component: RouteComponent,
   loader: async () => {
-    const organizations = await getMyOrganizations();
-    return { organizations };
+    const [organizations, activeOrganization] = await Promise.all([
+      getMyOrganizations(),
+      getActiveOrganization(),
+    ]);
+
+    return { organizations, activeOrganization };
   },
 });
 
 function RouteComponent() {
-  const { organizations } = Route.useLoaderData();
-  const activeOrganization = authClient.useActiveOrganization();
+  const { organizations, activeOrganization } = Route.useLoaderData();
 
   return (
     <SidebarProvider>
       <NotoSidebar
-        activeOrganization={activeOrganization.data}
+        activeOrganization={activeOrganization}
         organizations={organizations}
       />
       <main>
