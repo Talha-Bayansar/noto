@@ -77,4 +77,26 @@ export class FolderService {
 
     return folder;
   }
+
+  async updateFolder(organizationId: string, folderId: string, name: string) {
+    const folder = await db
+      .update(folderTable)
+      .set({
+        name,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(folderTable.organizationId, organizationId),
+          eq(folderTable.id, folderId)
+        )
+      )
+      .returning();
+
+    if (folder.length === 0) {
+      return null;
+    }
+
+    return folder[0];
+  }
 }

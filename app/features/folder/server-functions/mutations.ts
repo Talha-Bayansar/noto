@@ -52,3 +52,31 @@ export const deleteFolder = createServerFn({
 
     return folder;
   });
+
+export const updateFolder = createServerFn({
+  method: "POST",
+})
+  .middleware([authMiddleware])
+  .validator(
+    z.object({
+      id: z.string(),
+      name: z.string().min(1, "Name is required"),
+    })
+  )
+  .handler(async ({ data, context }) => {
+    const { session } = context.auth;
+
+    if (!session.activeOrganizationId) {
+      throw new Error("No active organization");
+    }
+
+    const folderService = new FolderService();
+
+    const folder = await folderService.updateFolder(
+      session.activeOrganizationId,
+      data.id,
+      data.name
+    );
+
+    return folder;
+  });

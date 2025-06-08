@@ -9,6 +9,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { DeleteFolder } from "../delete-folder";
+import { UpdateFolder } from "../update-folder";
 
 type Props = {
   folder: Folder;
@@ -29,9 +30,11 @@ export const SidebarFolder = ({ folder }: Props) => {
         </SidebarMenuItem>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem>
-          <Edit /> Rename
-        </ContextMenuItem>
+        <UpdateFolder folder={folder}>
+          <ContextMenuItem onSelect={(e) => e.preventDefault()}>
+            <Edit /> Rename
+          </ContextMenuItem>
+        </UpdateFolder>
         <DeleteFolder
           folderId={folder.id}
           parentId={folder.parentId ?? undefined}
