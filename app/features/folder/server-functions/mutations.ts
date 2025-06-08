@@ -30,3 +30,25 @@ export const createFolder = createServerFn({
 
     return folder;
   });
+
+export const deleteFolder = createServerFn({
+  method: "POST",
+})
+  .middleware([authMiddleware])
+  .validator(z.object({ id: z.string() }))
+  .handler(async ({ data, context }) => {
+    const { session } = context.auth;
+
+    if (!session.activeOrganizationId) {
+      throw new Error("No active organization");
+    }
+
+    const folderService = new FolderService();
+
+    const folder = await folderService.deleteFolder(
+      session.activeOrganizationId,
+      data.id
+    );
+
+    return folder;
+  });
