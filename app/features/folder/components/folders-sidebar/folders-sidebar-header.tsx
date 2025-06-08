@@ -5,17 +5,17 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "../ui/sidebar";
+} from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { DropdownMenuContent } from "../ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { updateActivOrganization } from "@/features/organization/server-functions/mutations";
 import { useRouter } from "@tanstack/react-router";
 
-export const NotoSidebarHeader = ({
+export const FoldersSidebarHeader = ({
   activeOrganization,
   organizations,
 }: {

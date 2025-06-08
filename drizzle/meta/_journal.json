@@ -15,6 +15,13 @@
       "when": 1748981778179,
       "tag": "0001_freezing_vengeance",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749198772070,
+      "tag": "0002_fluffy_fallen_one",
+      "breakpoints": true
     }
   ]
 }
