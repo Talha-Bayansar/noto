@@ -8,6 +8,7 @@ import { SidebarFolder } from "./sidebar-folder";
 import { useFolder } from "../../hooks/use-folder";
 import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { CreateFolderButton } from "./create-folder-button";
 
 type Props = {
   parentId?: string;
@@ -37,6 +38,7 @@ export const SidebarFolders = ({ parentId }: Props) => {
           <SidebarFolder key={folder.id} folder={folder} />
         ))}
       </SidebarMenu>
+      <CreateFolderButton parentId={parentId} />
     </SidebarGroup>
   );
 };

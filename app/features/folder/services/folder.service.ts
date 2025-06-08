@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { folderTable } from "@/db/schemas/note";
 import { and, eq, isNull } from "drizzle-orm";
+import { v4 as uuidv4 } from "uuid";
 
 export class FolderService {
   async getRootFolders(organizationId: string) {
@@ -45,5 +46,16 @@ export class FolderService {
     }
 
     return folders[0];
+  }
+
+  async createFolder(organizationId: string, name: string, parentId?: string) {
+    const folder = await db.insert(folderTable).values({
+      id: uuidv4(),
+      name,
+      organizationId,
+      parentId,
+    });
+
+    return folder;
   }
 }

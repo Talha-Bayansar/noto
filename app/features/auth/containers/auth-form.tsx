@@ -53,7 +53,7 @@ export const AuthForm = ({ onSuccess }: Props) => {
                 <Label htmlFor={field.name}>Email:</Label>
                 <Input
                   id={field.name}
-                  type=""
+                  type="email"
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
