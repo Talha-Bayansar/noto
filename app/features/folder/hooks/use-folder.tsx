@@ -7,11 +7,12 @@ type Props = {
 
 export const useFolder = ({ id }: Props) => {
   const key = ["folder", id];
+  const rootKey = ["folder"];
   const query = useSuspenseQuery({
     queryKey: key,
     queryFn: () =>
       id ? getFolderById({ data: { id } }) : Promise.resolve(null),
   });
 
-  return { ...query, key };
+  return { ...query, key, rootKey };
 };

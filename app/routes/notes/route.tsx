@@ -1,11 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { FoldersSidebar } from "@/features/folder/components/folders-sidebar";
-import {
-  getActiveOrganization,
-  getMyOrganizations,
-} from "@/features/organization/server-functions/queries";
 import z from "zod";
+import { getAuth } from "@/features/auth/server-functions/queries";
 
 const searchSchema = z.object({
   parent: z.string().optional(),
@@ -14,27 +11,25 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/notes")({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loader: async () => {
-    const [organizations, activeOrganization] = await Promise.all([
-      getMyOrganizations(),
-      getActiveOrganization(),
-    ]);
+  beforeLoad: async () => {
+    const auth = await getAuth();
 
-    return { organizations, activeOrganization };
+    if (!auth?.session) {
+      throw redirect({
+        to: "/auth",
+      });
+    }
+
+    return { auth };
   },
 });
 
 function RouteComponent() {
-  const { organizations, activeOrganization } = Route.useLoaderData();
   const { parent } = Route.useSearch();
 
   return (
     <SidebarProvider>
-      <FoldersSidebar
-        activeOrganization={activeOrganization}
-        organizations={organizations}
-        parentId={parent}
-      />
+      <FoldersSidebar parentId={parent} />
       <main>
         <SidebarTrigger />
         <Outlet />

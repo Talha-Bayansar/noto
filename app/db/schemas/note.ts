@@ -15,9 +15,9 @@ export const folderTable = pgTable(
   },
   (table) => [
     foreignKey({
-      name: "folder_organization_fk",
-      columns: [table.organizationId],
-      foreignColumns: [organizationTable.id],
+      name: "folder_parent_id_fk",
+      columns: [table.parentId],
+      foreignColumns: [table.id],
     }).onDelete("cascade"),
   ]
 );

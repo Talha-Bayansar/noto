@@ -15,8 +15,16 @@ type Props = {
 };
 
 export const SidebarFolders = ({ parentId }: Props) => {
-  const { data: folder } = useFolder({ id: parentId });
-  const { data: folders } = useFolders({ parentId });
+  const { data: folder, error: folderError } = useFolder({ id: parentId });
+  const { data: folders, error: foldersError } = useFolders({ parentId });
+
+  if (folderError || foldersError) {
+    return (
+      <em className="text-destructive text-center">
+        {folderError?.message ?? foldersError?.message}
+      </em>
+    );
+  }
 
   return (
     <SidebarGroup>

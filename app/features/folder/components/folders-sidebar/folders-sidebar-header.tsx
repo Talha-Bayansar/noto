@@ -13,23 +13,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { updateActivOrganization } from "@/features/organization/server-functions/mutations";
-import { useRouter } from "@tanstack/react-router";
+import { useActiveOrganization } from "@/features/organization/hooks/use-active-organization";
+import { useOrganizations } from "@/features/organization/hooks/use-organizations";
 
-export const FoldersSidebarHeader = ({
-  activeOrganization,
-  organizations,
-}: {
-  activeOrganization?: Organization | null;
-  organizations: Organization[];
-}) => {
-  const router = useRouter();
+export const FoldersSidebarHeader = () => {
+  const { data: activeOrganization, refetch } = useActiveOrganization();
+  const { data: organizations } = useOrganizations();
+
   const handleActiveOrganization = async (organization: Organization) => {
     await updateActivOrganization({
       data: {
         organizationId: organization.id,
       },
     });
-    router.invalidate();
+
+    await refetch();
   };
 
   return (

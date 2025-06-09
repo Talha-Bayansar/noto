@@ -7,6 +7,7 @@ type Props = {
 
 export const useFolders = ({ parentId }: Props) => {
   const key = ["folders", parentId];
+  const rootKey = ["folders"];
   const params = parentId ? { data: { parentId } } : undefined;
 
   const query = useSuspenseQuery({
@@ -14,5 +15,5 @@ export const useFolders = ({ parentId }: Props) => {
     queryFn: () => getFolders(params),
   });
 
-  return { ...query, key };
+  return { ...query, key, rootKey };
 };

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { folderTable } from "@/db/schemas/note";
-import { and, eq, isNull, or } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 export class FolderService {
@@ -59,25 +59,6 @@ export class FolderService {
     return folder;
   }
 
-  async deleteFolder(organizationId: string, folderId: string) {
-    const folder = await db
-      .delete(folderTable)
-      .where(
-        or(
-          and(
-            eq(folderTable.organizationId, organizationId),
-            eq(folderTable.id, folderId)
-          ),
-          and(
-            eq(folderTable.organizationId, organizationId),
-            eq(folderTable.parentId, folderId)
-          )
-        )
-      );
-
-    return folder;
-  }
-
   async updateFolder(organizationId: string, folderId: string, name: string) {
     const folder = await db
       .update(folderTable)
@@ -90,13 +71,21 @@ export class FolderService {
           eq(folderTable.organizationId, organizationId),
           eq(folderTable.id, folderId)
         )
-      )
-      .returning();
+      );
 
-    if (folder.length === 0) {
-      return null;
-    }
+    return folder;
+  }
 
-    return folder[0];
+  async deleteFolder(organizationId: string, folderId: string) {
+    const folder = await db
+      .delete(folderTable)
+      .where(
+        and(
+          eq(folderTable.organizationId, organizationId),
+          eq(folderTable.id, folderId)
+        )
+      );
+
+    return folder;
   }
 }
