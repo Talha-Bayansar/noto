@@ -1,9 +1,9 @@
+import { Form } from "@/components/form";
+import { FormField } from "@/components/form/form-field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
-import type { AnyFieldApi } from "@tanstack/react-form";
 import type { SuccessContext } from "better-auth/react";
 import { z } from "zod";
 
@@ -36,56 +36,40 @@ export const AuthForm = ({ onSuccess }: Props) => {
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-      className="flex flex-col gap-3 justify-between"
-    >
-      <div className="flex flex-col gap-3">
-        <form.Field
-          name="email"
-          children={(field) => {
-            return (
-              <div className="flex flex-col gap-2">
-                <Label htmlFor={field.name}>Email:</Label>
-                <Input
-                  id={field.name}
-                  type="email"
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-                <FieldInfo field={field} />
-              </div>
-            );
-          }}
+    <Form
+      onSubmit={form.handleSubmit}
+      submitComponent={
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <LoadingButton
+              type="submit"
+              disabled={!canSubmit}
+              loading={isSubmitting}
+            >
+              Submit
+            </LoadingButton>
+          )}
         />
-      </div>
-      <form.Subscribe
-        selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
-          <LoadingButton
-            type="submit"
-            disabled={!canSubmit}
-            loading={isSubmitting}
-          >
-            Submit
-          </LoadingButton>
-        )}
+      }
+    >
+      <form.Field
+        name="email"
+        children={(field) => {
+          return (
+            <FormField field={field} label="Email">
+              <Input
+                id={field.name}
+                type="email"
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </FormField>
+          );
+        }}
       />
-    </form>
+    </Form>
   );
 };
-
-function FieldInfo({ field }: { field: AnyFieldApi }) {
-  const errors: string[] = field.state.meta.errors.map(
-    (error) => error.message
-  );
-  return field.state.meta.isTouched && !field.state.meta.isValid ? (
-    <em className="text-red-500">{errors.join(", ")}</em>
-  ) : null;
-}

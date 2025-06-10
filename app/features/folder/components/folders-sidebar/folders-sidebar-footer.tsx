@@ -10,11 +10,13 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
+import { SignOutDialog } from "@/features/auth/components/sign-out-dialog";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { User2, ChevronUp } from "lucide-react";
 
-type Props = {};
+export const FoldersSidebarFooter = () => {
+  const { data: auth } = useAuth();
 
-export const FoldersSidebarFooter = (props: Props) => {
   return (
     <SidebarFooter>
       <SidebarMenu>
@@ -22,20 +24,19 @@ export const FoldersSidebarFooter = (props: Props) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton>
-                <User2 /> Username
+                <User2 />{" "}
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                  {auth?.user.email}
+                </span>
                 <ChevronUp className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top">
-              <DropdownMenuItem>
-                <span>Account</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Billing</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <span>Sign out</span>
-              </DropdownMenuItem>
+              <SignOutDialog>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  Sign out
+                </DropdownMenuItem>
+              </SignOutDialog>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
