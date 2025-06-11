@@ -21,3 +21,17 @@ export const folderTable = pgTable(
     }).onDelete("cascade"),
   ]
 );
+
+export const noteTable = pgTable("note", {
+  id: text("id").primaryKey(),
+  organizationId: text("organization_id")
+    .notNull()
+    .references(() => organizationTable.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  folderId: text("folder_id").references(() => folderTable.id, {
+    onDelete: "cascade",
+  }),
+  content: text("content").notNull().default(""),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
