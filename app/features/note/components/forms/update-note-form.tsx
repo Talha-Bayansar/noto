@@ -13,7 +13,7 @@ const noteSchema = z.object({
 });
 
 type Props = {
-  note: Note;
+  note: Partial<Note>;
   onSuccess?: () => void;
 };
 
@@ -24,12 +24,12 @@ export const UpdateNoteForm = ({ note, onSuccess }: Props) => {
 
   const form = useForm({
     defaultValues: {
-      name: note.name,
+      name: note.name ?? "",
     },
     onSubmit: async ({ value }) => {
       await updateNote({
         data: {
-          id: note.id,
+          id: note.id!,
           name: value.name,
         },
       });

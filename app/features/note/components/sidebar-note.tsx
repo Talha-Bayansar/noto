@@ -8,6 +8,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import type { Note } from "../types/note";
+import { UpdateNoteDialog } from "./update-note-dialog";
 
 type Props = {
   note: Omit<Note, "content">;
@@ -32,12 +33,12 @@ export const SidebarNote = ({ note }: Props) => {
         </SidebarMenuItem>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        {/* <UpdateFolder folder={folder}>
+        <UpdateNoteDialog note={note}>
           <ContextMenuItem onSelect={(e) => e.preventDefault()}>
             <Edit /> Rename
           </ContextMenuItem>
-        </UpdateFolder>
-        <DeleteFolder
+        </UpdateNoteDialog>
+        {/* <DeleteFolder
           folderId={folder.id}
           parentId={folder.parentId ?? undefined}
         >
