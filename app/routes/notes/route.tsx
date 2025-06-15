@@ -3,6 +3,7 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import z from "zod";
 import { getAuth } from "@/features/auth/server-functions/queries";
 import { FileSystemSidebar } from "@/features/file-system/containers/file-system-sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const searchSchema = z.object({
   parent: z.string().optional(),
@@ -26,12 +27,13 @@ export const Route = createFileRoute("/notes")({
 
 function RouteComponent() {
   const { parent } = Route.useSearch();
+  const isMobile = useIsMobile();
 
   return (
     <SidebarProvider>
       <FileSystemSidebar parentId={parent} />
-      <main>
-        <SidebarTrigger />
+      <main className="w-full flex flex-col">
+        {isMobile && <SidebarTrigger />}
         <Outlet />
       </main>
     </SidebarProvider>

@@ -93,6 +93,24 @@ export class NoteService {
     return note;
   }
 
+  async updateNoteContent(
+    organizationId: string,
+    noteId: string,
+    content: string
+  ) {
+    const note = await db
+      .update(noteTable)
+      .set({ content })
+      .where(
+        and(
+          eq(noteTable.id, noteId),
+          eq(noteTable.organizationId, organizationId)
+        )
+      );
+
+    return note;
+  }
+
   async deleteNote(organizationId: string, noteId: string) {
     const note = await db
       .delete(noteTable)

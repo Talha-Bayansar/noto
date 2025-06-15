@@ -55,6 +55,27 @@ export const updateNote = createServerFn()
     return note;
   });
 
+export const updateNoteContent = createServerFn()
+  .middleware([authMiddleware])
+  .validator(z.object({ id: z.string(), content: z.string() }))
+  .handler(async ({ context, data }) => {
+    const auth = context.auth;
+    const organizationId = auth.session.activeOrganizationId;
+
+    if (!organizationId) {
+      throw new Error("No active organization");
+    }
+
+    const noteService = new NoteService();
+    const note = await noteService.updateNoteContent(
+      organizationId,
+      data.id,
+      data.content
+    );
+
+    return note;
+  });
+
 export const deleteNote = createServerFn()
   .middleware([authMiddleware])
   .validator(z.object({ id: z.string() }))
