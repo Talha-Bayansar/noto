@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { NoteService } from "../services/note.service";
+import { authMiddleware } from "@/features/auth/middlewares/auth-middleware";
 
 export const getNotes = createServerFn()
   .validator(
@@ -34,4 +35,23 @@ export const getNotes = createServerFn()
     }
 
     return notes;
+  });
+
+export const getNote = createServerFn()
+  .middleware([authMiddleware])
+  .validator(z.object({ id: z.string() }))
+  .handler(async ({ data, context }) => {
+    const auth = context.auth;
+
+    const organizationId = auth.session.activeOrganizationId;
+
+    if (!organizationId) {
+      throw new Error("No active organization");
+    }
+
+    const noteService = new NoteService();
+
+    const note = await noteService.getNoteById(organizationId, data.id);
+
+    return note;
   });

@@ -42,6 +42,24 @@ export class NoteService {
     return notes;
   }
 
+  async getNoteById(organizationId: string, noteId: string) {
+    const note = await db
+      .select()
+      .from(noteTable)
+      .where(
+        and(
+          eq(noteTable.id, noteId),
+          eq(noteTable.organizationId, organizationId)
+        )
+      );
+
+    if (note.length > 0) {
+      return note[0];
+    }
+
+    return null;
+  }
+
   async createNote(organizationId: string, name: string, folderId?: string) {
     const note = await db.insert(noteTable).values({
       id: uuidv4(),

@@ -19,7 +19,11 @@ export const SidebarNote = ({ note }: Props) => {
       <ContextMenuTrigger asChild>
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
-            <Link to="/notes" search={{ parent: note?.id }}>
+            <Link
+              to="/notes/$noteId"
+              search={{ parent: note?.folderId ?? undefined }}
+              params={{ noteId: note.id }}
+            >
               <StickyNoteIcon />
               {note?.name}
               <ChevronRightIcon className="ml-auto" />
