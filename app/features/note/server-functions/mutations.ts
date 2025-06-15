@@ -54,3 +54,20 @@ export const updateNote = createServerFn()
     );
     return note;
   });
+
+export const deleteNote = createServerFn()
+  .middleware([authMiddleware])
+  .validator(z.object({ id: z.string() }))
+  .handler(async ({ context, data }) => {
+    const auth = context.auth;
+    const organizationId = auth.session.activeOrganizationId;
+
+    if (!organizationId) {
+      throw new Error("No active organization");
+    }
+
+    const noteService = new NoteService();
+    const note = await noteService.deleteNote(organizationId, data.id);
+
+    return note;
+  });

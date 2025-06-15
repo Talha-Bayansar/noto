@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/context-menu";
 import type { Note } from "../types/note";
 import { UpdateNoteDialog } from "./update-note-dialog";
+import { DeleteNoteDialog } from "./delete-note-dialog";
 
 type Props = {
   note: Omit<Note, "content">;
@@ -38,9 +39,9 @@ export const SidebarNote = ({ note }: Props) => {
             <Edit /> Rename
           </ContextMenuItem>
         </UpdateNoteDialog>
-        {/* <DeleteFolder
-          folderId={folder.id}
-          parentId={folder.parentId ?? undefined}
+        <DeleteNoteDialog
+          noteId={note.id}
+          folderId={note.folderId ?? undefined}
         >
           <ContextMenuItem
             className="text-destructive"
@@ -48,7 +49,7 @@ export const SidebarNote = ({ note }: Props) => {
           >
             <Trash2 className="text-destructive" /> Delete
           </ContextMenuItem>
-        </DeleteFolder> */}
+        </DeleteNoteDialog>
       </ContextMenuContent>
     </ContextMenu>
   );
