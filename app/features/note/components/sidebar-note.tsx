@@ -1,5 +1,5 @@
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import { ChevronRightIcon, Edit, FolderIcon, Trash2 } from "lucide-react";
+import { ChevronRightIcon, Edit, StickyNoteIcon, Trash2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import {
   ContextMenu,
@@ -20,7 +20,7 @@ export const SidebarNote = ({ note }: Props) => {
         <SidebarMenuItem>
           <SidebarMenuButton asChild>
             <Link to="/notes" search={{ parent: note?.id }}>
-              <FolderIcon />
+              <StickyNoteIcon />
               {note?.name}
               <ChevronRightIcon className="ml-auto" />
             </Link>

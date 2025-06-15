@@ -1,10 +1,28 @@
 import { db } from "@/db";
 import { noteTable } from "@/db/schemas/note";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 export class NoteService {
-  async getNotes(organizationId: string, folderId?: string) {
+  async getRootNotes(organizationId: string) {
+    const notes = await db
+      .select({
+        id: noteTable.id,
+        name: noteTable.name,
+        folderId: noteTable.folderId,
+      })
+      .from(noteTable)
+      .where(
+        and(
+          eq(noteTable.organizationId, organizationId),
+          isNull(noteTable.folderId)
+        )
+      );
+
+    return notes;
+  }
+
+  async getNotesByFolderId(organizationId: string, folderId?: string) {
     const whereClause = folderId
       ? and(
           eq(noteTable.folderId, folderId),

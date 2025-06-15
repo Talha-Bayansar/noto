@@ -51,13 +51,24 @@ export const FileSystemSidebarItems = ({ parentId }: Props) => {
         {folder?.name ?? "Root"}
       </SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) =>
-          "parentId" in item ? (
-            <SidebarFolder key={item.id} folder={item as Folder} />
-          ) : (
-            <SidebarNote key={item.id} note={item as Note} />
-          )
-        )}
+        {items
+          .sort((a, b) => {
+            const aName = a.name?.toLowerCase();
+            const bName = b.name?.toLowerCase();
+
+            if (aName && bName) {
+              if (aName < bName) return -1;
+              if (aName > bName) return 1;
+            }
+            return 0;
+          })
+          .map((item) =>
+            "parentId" in item ? (
+              <SidebarFolder key={item.id} folder={item as Folder} />
+            ) : (
+              <SidebarNote key={item.id} note={item as Note} />
+            )
+          )}
       </SidebarMenu>
       <FileSystemSidebarCreateButton parentId={parentId} />
     </SidebarGroup>

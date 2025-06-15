@@ -25,7 +25,13 @@ export const getNotes = createServerFn()
     const { folderId } = data;
 
     const noteService = new NoteService();
-    const notes = await noteService.getNotes(organizationId, folderId);
+
+    let notes = [];
+    if (folderId) {
+      notes = await noteService.getNotesByFolderId(organizationId, folderId);
+    } else {
+      notes = await noteService.getRootNotes(organizationId);
+    }
 
     return notes;
   });
