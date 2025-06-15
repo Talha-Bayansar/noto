@@ -14,7 +14,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const UpdateFolder = ({ folder, children }: Props) => {
+export const UpdateFolderDialog = ({ folder, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

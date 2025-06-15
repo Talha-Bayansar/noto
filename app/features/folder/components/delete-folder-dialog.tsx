@@ -20,7 +20,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export const DeleteFolder = ({ folderId, parentId, children }: Props) => {
+export const DeleteFolderDialog = ({ folderId, parentId, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const { refetch } = useFolders({
     parentId,

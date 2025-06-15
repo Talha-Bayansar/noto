@@ -27,7 +27,7 @@ export const noteTable = pgTable("note", {
   organizationId: text("organization_id")
     .notNull()
     .references(() => organizationTable.id, { onDelete: "cascade" }),
-  title: text("title").notNull(),
+  name: text("name").notNull(),
   folderId: text("folder_id").references(() => folderTable.id, {
     onDelete: "cascade",
   }),

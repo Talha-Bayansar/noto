@@ -1,28 +1,28 @@
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
-import { FoldersSidebarHeader } from "./folders-sidebar-header";
-import { FoldersSidebarFooter } from "./folders-sidebar-footer";
-import { SidebarFolders } from "./sidebar-folders";
 import { Suspense } from "react";
 import { useActiveOrganization } from "@/features/organization/hooks/use-active-organization";
+import { FileSystemSidebarHeader } from "../components/file-system-sidebar-header";
+import { FileSystemSidebarFooter } from "../components/file-system-sidebar-footer";
+import { FileSystemSidebarItems } from "./file-system-sidebar-items";
 
 type Props = {
   parentId?: string;
 };
 
-export function FoldersSidebar({ parentId }: Props) {
+export function FileSystemSidebar({ parentId }: Props) {
   const { data: activeOrganization } = useActiveOrganization();
 
   return (
     <Sidebar>
-      <FoldersSidebarHeader />
+      <FileSystemSidebarHeader />
       <SidebarContent>
         {activeOrganization && (
           <Suspense>
-            <SidebarFolders parentId={parentId} />
+            <FileSystemSidebarItems parentId={parentId} />
           </Suspense>
         )}
       </SidebarContent>
-      <FoldersSidebarFooter />
+      <FileSystemSidebarFooter />
     </Sidebar>
   );
 }

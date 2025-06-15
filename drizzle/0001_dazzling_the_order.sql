@@ -1,7 +1,7 @@
 CREATE TABLE "note" (
 	"id" text PRIMARY KEY NOT NULL,
 	"organization_id" text NOT NULL,
-	"title" text NOT NULL,
+	"name" text NOT NULL,
 	"folder_id" text,
 	"content" text DEFAULT '' NOT NULL,
 	"created_at" timestamp DEFAULT now(),

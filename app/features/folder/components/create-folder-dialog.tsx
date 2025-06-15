@@ -5,25 +5,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { SidebarGroupAction } from "@/components/ui/sidebar";
-import { Plus } from "lucide-react";
 import { useState } from "react";
-import { CreateFolderForm } from "../forms/create-folder-form";
+import { CreateFolderForm } from "./forms/create-folder-form";
 
 type Props = {
   parentId?: string;
+  children: React.ReactNode;
 };
 
-export const CreateFolderButton = ({ parentId }: Props) => {
+export const CreateFolderDialog = ({ parentId, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <SidebarGroupAction title="New folder">
-          <Plus /> <span className="sr-only">New folder</span>
-        </SidebarGroupAction>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>New folder</DialogTitle>

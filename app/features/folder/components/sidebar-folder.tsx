@@ -1,5 +1,5 @@
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
-import type { Folder } from "../../types/folder";
+import type { Folder } from "../types/folder";
 import { ChevronRightIcon, Edit, FolderIcon, Trash2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import {
@@ -8,8 +8,8 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { DeleteFolder } from "../delete-folder";
-import { UpdateFolder } from "../update-folder";
+import { DeleteFolderDialog } from "./delete-folder-dialog";
+import { UpdateFolderDialog } from "./update-folder-dialog";
 
 type Props = {
   folder: Folder;
@@ -30,12 +30,12 @@ export const SidebarFolder = ({ folder }: Props) => {
         </SidebarMenuItem>
       </ContextMenuTrigger>
       <ContextMenuContent>
-        <UpdateFolder folder={folder}>
+        <UpdateFolderDialog folder={folder}>
           <ContextMenuItem onSelect={(e) => e.preventDefault()}>
             <Edit /> Rename
           </ContextMenuItem>
-        </UpdateFolder>
-        <DeleteFolder
+        </UpdateFolderDialog>
+        <DeleteFolderDialog
           folderId={folder.id}
           parentId={folder.parentId ?? undefined}
         >
@@ -45,7 +45,7 @@ export const SidebarFolder = ({ folder }: Props) => {
           >
             <Trash2 className="text-destructive" /> Delete
           </ContextMenuItem>
-        </DeleteFolder>
+        </DeleteFolderDialog>
       </ContextMenuContent>
     </ContextMenu>
   );
